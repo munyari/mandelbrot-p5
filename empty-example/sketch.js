@@ -53,26 +53,19 @@ function Yscale(ycoord) {
 }
 
 function generatePalette() {
-  var base_r = Math.round(Math.random()*256);
-  var base_g = Math.round(Math.random()*256);
-  var base_b = Math.round(Math.random()*256);
-
   var palette = [];
-  for (var i = 0; i < MAX_ITERATION; i++) {
-    var new_col = getColor(base_r, base_b, base_g, 20);
-    var c = "rgb(" + new_col[0] + "," + new_col[1] + "," + new_col[2] + ")";
+  for (var i = 0; i < 16; i++) {
+    var c = "rgb(" + (i*8) + "," + (i*8) + "," + (128+i*4) + ")";
     palette.push(c);
-    console.log(c);
+  }
+  for (var i = 16; i < 64; i++) {
+    var c = "rgb(" + (128+i-16) + "," + (128+i-16) + "," + (192+i-16) + ")";
+    palette.push(c);
+  }
+  for (var i = 64; i < MAX_ITERATION; i++) {
+    // 319 is TOTALLY a magic number in this context
+    var c = "rgb(" + (319-i) + "," + (128+(319-i)/2) + "," + (319-i) + ")";
+    palette.push(c);
   }
   return palette;
-}
-
-function getColor(base_r, base_b, base_g, offset) {
-  var value = (base_r + base_b + base_g)/3.0;
-  var newValue = value + 2 * Math.random() * offset - offset;
-  var valueRatio = newValue / value;
-  new_r = Math.round(base_r * valueRatio);
-  new_g = Math.round(base_g * valueRatio);
-  new_b = Math.round(base_b * valueRatio);
-  return [new_r, new_g, new_b];
 }

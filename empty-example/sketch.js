@@ -1,33 +1,35 @@
-var max_iteration = 1000;
+var MAX_ITERATION = 1000;
 var palette = generatePalette();
 var hist = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(100);
-  printFrac();
+  renderFractal();
 }
 
-function printFrac() {
-  for (var i = 0; i < width; i++) {
-    for (var j = 0; j < height; j++) {
-      var x0 = Xscale(i);
-      var y0 = Yscale(j);
-      var x = 0.0;
-      var y = 0.0;
+function renderFractal() {
+  for (var x = 0; x < width; x++) {
+    for (var y = 0; y < height; y++) {
+      var cReal = Xscale(x);
+      var cImg = Yscale(y);
+
+      var zReal = 0.0;
+      var zImg = 0.0;
+
       var iteration = 0;
-      while (x * x + y*y < 4 && iteration < max_iteration) {
-        var xtemp = x*x - y*y + x0;
-        var ytemp = 2*x*y + y0;
-        if (x == xtemp && y == ytemp) {
-          iteration = max_iteration;
+      while (zReal * zReal + zImg*zImg < 4 && iteration < MAX_ITERATION) {
+        var nextZReal = zReal*zReal - zImg*zImg + cReal;
+        var nextZImg = 2*zReal*zImg + cImg;
+        if (zReal == nextZReal && zImg == nextZImg) {
+          iteration = MAX_ITERATION;
           break;
         }
-        x = xtemp;
-        y = ytemp;
+        zReal = nextZReal;
+        zImg = nextZImg;
         iteration++;
       }
-      if (iteration == max_iteration) {
+      if (iteration == MAX_ITERATION) {
         stroke(0);
       }
       else {
@@ -35,9 +37,8 @@ function printFrac() {
         // var c = palette[iteration % palette.length];
         stroke(c);
       }
-      point(i,j);
+      point(x,y);
     }
-
   }
 }
 
@@ -57,7 +58,7 @@ function generatePalette() {
   var base_b = Math.round(Math.random()*256);
 
   var palette = [];
-  for (var i = 0; i < max_iteration; i++) {
+  for (var i = 0; i < MAX_ITERATION; i++) {
     var new_col = getColor(base_r, base_b, base_g, 20);
     var c = "rgb(" + new_col[0] + "," + new_col[1] + "," + new_col[2] + ")";
     palette.push(c);

@@ -1,5 +1,6 @@
 var max_iteration = 1000;
 var palette = generatePalette();
+var hist = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -17,8 +18,13 @@ function printFrac() {
       var iteration = 0;
       while (x * x + y*y < 4 && iteration < max_iteration) {
         var xtemp = x*x - y*y + x0;
-        y = 2*x*y + y0;
+        var ytemp = 2*x*y + y0;
+        if (x == xtemp && y == ytemp) {
+          iteration = max_iteration;
+          break;
+        }
         x = xtemp;
+        y = ytemp;
         iteration++;
       }
       if (iteration == max_iteration) {

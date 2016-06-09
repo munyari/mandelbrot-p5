@@ -1,4 +1,4 @@
-var MAX_ITERATION = 1000;
+var MAX_ITERATION = 200;
 var palette = generatePalette();
 // (x1, y1) and (x2, y2) define that part of the complex plane that is visible
 var x1 = -2.5;
@@ -10,8 +10,8 @@ var cwidth = x2-x1;
 var cheight = y2-y1;
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  background(100);
+  createCanvas(700, 400);
+  // createCanvas(windowWidth, windowHeight);
   renderFractal();
 }
 
@@ -76,4 +76,17 @@ function generatePalette() {
   }
   palette[MAX_ITERATION] = "rgb(0,0,0)";
   return palette;
+}
+
+function mousePressed() {
+  var mouseXCoord = (mouseX * 1.0 / width) * cwidth + x1;
+  var mouseYCoord = (mouseY * 1.0 / height) * cheight + y1;
+  x1 = mouseXCoord - cwidth / 4.0;
+  x2 = mouseXCoord + cwidth / 4.0;
+  y1 = mouseYCoord - cheight / 4.0;
+  y2 = mouseYCoord + cheight / 4.0;
+  cwidth /= 2.0;
+  cheight /= 2.0;
+
+  renderFractal();
 }

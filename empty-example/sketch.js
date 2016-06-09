@@ -1,6 +1,5 @@
 var MAX_ITERATION = 1000;
 var palette = generatePalette();
-var hist = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -11,35 +10,35 @@ function setup() {
 function renderFractal() {
   for (var x = 0; x < width; x++) {
     for (var y = 0; y < height; y++) {
-      var cReal = Xscale(x);
-      var cImg = Yscale(y);
+      var escapeTime = calculateEscapeTime(x, y);
 
-      var zReal = 0.0;
-      var zImg = 0.0;
+      stroke(palette[escapeTime]);
 
-      var iteration = 0;
-      while (zReal * zReal + zImg*zImg < 4 && iteration < MAX_ITERATION) {
-        var nextZReal = zReal*zReal - zImg*zImg + cReal;
-        var nextZImg = 2*zReal*zImg + cImg;
-        if (zReal == nextZReal && zImg == nextZImg) {
-          iteration = MAX_ITERATION;
-          break;
-        }
-        zReal = nextZReal;
-        zImg = nextZImg;
-        iteration++;
-      }
-      if (iteration == MAX_ITERATION) {
-        stroke(0);
-      }
-      else {
-        var c = palette[iteration];
-        // var c = palette[iteration % palette.length];
-        stroke(c);
-      }
       point(x,y);
     }
   }
+}
+
+function calculateEscapeTime(x, y) {
+  var cReal = Xscale(x);
+  var cImg = Yscale(y);
+
+  var zReal = 0.0;
+  var zImg = 0.0;
+
+  var iteration = 0;
+  while (zReal * zReal + zImg*zImg < 4 && iteration < MAX_ITERATION) {
+    var nextZReal = zReal*zReal - zImg*zImg + cReal;
+    var nextZImg = 2*zReal*zImg + cImg;
+    if (zReal == nextZReal && zImg == nextZImg) {
+      iteration = MAX_ITERATION;
+      break;
+    }
+    zReal = nextZReal;
+    zImg = nextZImg;
+    iteration++;
+  }
+  return iteration;
 }
 
 // scaled x coordinate (-2.5, 1)
@@ -67,5 +66,6 @@ function generatePalette() {
     var c = "rgb(" + (319-i) + "," + (128+(319-i)/2) + "," + (319-i) + ")";
     palette.push(c);
   }
+  palette[MAX_ITERATION] = "rgb(0,0,0)";
   return palette;
 }

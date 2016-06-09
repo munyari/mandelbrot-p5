@@ -1,5 +1,13 @@
 var MAX_ITERATION = 1000;
 var palette = generatePalette();
+// (x1, y1) and (x2, y2) define that part of the complex plane that is visible
+var x1 = -2.5;
+var x2 = 1;
+var y1 = -1;
+var y2 = 1;
+// width and height of visible complex plane
+var cwidth = x2-x1;
+var cheight = y2-y1;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -20,8 +28,8 @@ function renderFractal() {
 }
 
 function calculateEscapeTime(x, y) {
-  var cReal = Xscale(x);
-  var cImg = Yscale(y);
+  var cReal = mapXToReal(x);
+  var cImg = mapYToComplex(y);
 
   var zReal = 0.0;
   var zImg = 0.0;
@@ -41,14 +49,14 @@ function calculateEscapeTime(x, y) {
   return iteration;
 }
 
-// scaled x coordinate (-2.5, 1)
-function Xscale(xcoord) {
-  return (xcoord * 3.5 / width) + -2.5;
+// map our bitmap x coordinate to a real axis coordinate
+function mapXToReal(xcoord) {
+  return cwidth * xcoord / width + x1;
 }
 
-// scaled y coordinate (-1, 1)
-function Yscale(ycoord) {
-  return (ycoord * 2.0 / height) + -1;
+// map our bitmap y coordinate to an imaginary axis coordinate
+function mapYToComplex(ycoord) {
+  return y1 + cheight * ycoord / height;
 }
 
 function generatePalette() {

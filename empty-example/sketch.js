@@ -1,4 +1,4 @@
-var MAX_ITERATION = 200;
+const MAX_ITERATION = 1024;
 var palette = generatePalette();
 // (x1, y1) and (x2, y2) define that part of the complex plane that is visible
 var x1 = -2.5;
@@ -10,8 +10,7 @@ var cwidth = x2-x1;
 var cheight = y2-y1;
 
 function setup() {
-  createCanvas(700, 400);
-  // createCanvas(windowWidth, windowHeight);
+  createCanvas(1400, 800);
   renderFractal();
 }
 
@@ -59,34 +58,36 @@ function mapYToComplex(ycoord) {
   return y1 + cheight * ycoord / height;
 }
 
+// set colors in this function
 function generatePalette() {
   var palette = [];
-  for (var i = 0; i < 16; i++) {
+  for (i = 0; i < 16; i++) {
     var c = "rgb(" + (i*8) + "," + (i*8) + "," + (128+i*4) + ")";
     palette.push(c);
   }
-  for (var i = 16; i < 64; i++) {
+  for (i = 16; i < 64; i++) {
     var c = "rgb(" + (128+i-16) + "," + (128+i-16) + "," + (192+i-16) + ")";
     palette.push(c);
   }
-  for (var i = 64; i < MAX_ITERATION; i++) {
+  for (i = 64; i < MAX_ITERATION; i++) {
     // 319 is TOTALLY a magic number in this context
-    var c = "rgb(" + (319-i) + "," + (128+(319-i)/2) + "," + (319-i) + ")";
+    var c = "rgb(" + ((319-i)%256) + "," + ((128+(319-i)/2)%256) + "," + ((319-i)%256) + ")";
     palette.push(c);
   }
   palette[MAX_ITERATION] = "rgb(0,0,0)";
   return palette;
 }
 
+// respond to mouse clicks
 function mousePressed() {
   var mouseXCoord = (mouseX * 1.0 / width) * cwidth + x1;
   var mouseYCoord = (mouseY * 1.0 / height) * cheight + y1;
-  x1 = mouseXCoord - cwidth / 4.0;
-  x2 = mouseXCoord + cwidth / 4.0;
-  y1 = mouseYCoord - cheight / 4.0;
-  y2 = mouseYCoord + cheight / 4.0;
-  cwidth /= 2.0;
-  cheight /= 2.0;
+  x1 = mouseXCoord - cwidth / 8.0;
+  x2 = mouseXCoord + cwidth / 8.0;
+  y1 = mouseYCoord - cheight / 8.0;
+  y2 = mouseYCoord + cheight / 8.0;
+  cwidth /= 4.0;
+  cheight /= 4.0;
 
   renderFractal();
 }
